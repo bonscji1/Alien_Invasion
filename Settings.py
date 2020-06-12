@@ -7,3 +7,4 @@ class Settings:
             self.screen_width = 1200
             self.screen_heigh = 800
             self.bg_color = (0,0,0)
+            self.fullScreen = False
