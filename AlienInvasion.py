@@ -3,6 +3,9 @@
 import sys
 import pygame
 
+from Settings import Settings
+from Ship import Ship
+
 
 class AlienInvasion:
     '''Main class, base of the program'''
@@ -10,11 +13,12 @@ class AlienInvasion:
     def __init__(self):
         '''initialize game and resources'''
         pygame.init()
-        self.screen = pygame.display.set_mode((1200, 800))
+        self.setings = Settings()
+        self.screen = pygame.display.set_mode((self.setings.screen_width, self.setings.screen_heigh))
         pygame.display.set_caption("Alien Invasion")
 
-        #set background color
-        self.bgc = (255,255,255)
+        self.ship = Ship(self)
+
 
 
 
@@ -27,10 +31,12 @@ class AlienInvasion:
                     sys.exit()
 
             # basic redraw
-            self.screen.fill(self.bgc)
+            self.screen.fill(self.setings.bg_color)
+            self.ship.blitme()
 
-        #make most recent screen visible
-        pygame.display.flip()
+
+            #make most recent screen visible
+            pygame.display.flip()
 
 if __name__ == "__main__":
     main = AlienInvasion()
