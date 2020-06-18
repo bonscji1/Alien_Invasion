@@ -5,7 +5,7 @@ class Settings:
             '''initial settings'''
             #Screen
             self.screen_width = 1200
-            self.screen_heigh = 800
+            self.screen_height = 800
             self.bg_color = (0,0,0)
             self.fullScreen = False
 
@@ -18,3 +18,9 @@ class Settings:
             self.bullet_height = 15
             self.bullet_color = (200,60,60)
             self.bullets_allowed = 3
+
+            #aliens
+            self.alien_buffer_zone = 4
+            self.alien_speed_horizontal = 1.0
+            self.alien_speed_vertical = 10
+            self.alien_moving_right = True
