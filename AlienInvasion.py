@@ -7,6 +7,8 @@ from Settings import Settings
 from Ship import Ship
 from Bullet import Bullet
 from Alien import Alien
+from Game_stats import Game_stats
+from time import sleep
 
 
 class AlienInvasion:
@@ -17,6 +19,8 @@ class AlienInvasion:
         pygame.init()
         self.settings = Settings()
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
+
+        self.stats = Game_stats(self)
 
         pygame.display.set_caption("Alien Invasion")
 
@@ -82,9 +86,14 @@ class AlienInvasion:
         self.bullets.add(Bullet(self))
 
     def _remove_obsole_bullets(self):
+        '''remove obsolete bullets and aliens if hit'''
         for bullet in self.bullets:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
+
+    def _alien_bullet_collision(self):
+        #Check for bullet sthat have hit aliens
+        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, self.settings.bullet_single_kill, True)
 
     def _create_alien(self, alien_number, row_number):
         alien = Alien(self)
@@ -114,6 +123,28 @@ class AlienInvasion:
         '''
         self._check_fleet_edges()
         self.aliens.update()
+        self._alien_ship_collision()
+        self._check_aliens_landed()
+
+    def _alien_ship_collision(self):
+        if pygame.sprite.spritecollideany(self.ship, self.aliens):
+            self._ship_hit()
+
+    def _ship_hit(self):
+        '''Ship has been hit logic'''
+        #remove ship life if you can
+        if self.stats.ship_left>0:
+            self.stats.ship_left -= 1
+            # reset game state
+            self.aliens.empty()
+            self._reset_state()
+            self.ship.center_ship()
+            #pause game for a bit
+            sleep(self.settings.hit_freeze_time)
+        else:
+            self._game_over()
+
+
 
     def _check_fleet_edges(self):
         '''Respond if any alien hit an edge'''
@@ -128,16 +159,43 @@ class AlienInvasion:
             alien.rect.y += self.settings.alien_speed_vertical
 
         self.settings.alien_moving_right = not self.settings.alien_moving_right
-        print(self.settings.alien_moving_right)
+
+
+    def _code_relentless_horde(self):
+        if not self.aliens:
+            self._reset_state()
+
+    def _check_aliens_landed(self):
+        '''check if aliens reached bottom of screen'''
+        screen_rect = self.screen.get_rect()
+        for alien in self.aliens.sprites():
+            if alien.rect.bottom >= screen_rect.bottom:
+                self._ship_hit()
+                break
+
+    def _reset_state(self):
+        '''Destroy bullets, reset aliens'''
+        self.bullets.empty()
+        self._create_invasion()
+
+    def _update_game_state(self):
+        self._remove_obsole_bullets()
+        self._alien_bullet_collision()
+        self._code_relentless_horde()
+
+    def _game_over(self):
+        self.settings.game_active = False
 
     def run(self):
         '''Main loop'''
         while True:
             self._check_events()
-            self.ship.update()
-            self.bullets.update()
-            self._remove_obsole_bullets()
-            self._update_aliens()
+
+            if self.settings.game_active:
+                self.ship.update()
+                self.bullets.update()
+                self._update_game_state()
+                self._update_aliens()
             self._update_screen()
 
 

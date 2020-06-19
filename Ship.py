@@ -20,10 +20,6 @@ class Ship:
         self.moving_x = 0
         self.x = float(self.rect.x)
 
-
-
-
-
     def update(self):
         '''update ship position'''
         if self.moving:
@@ -40,4 +36,9 @@ class Ship:
     def blitme(self):
         '''draw sbip at current location'''
         self.screen.blit(self.image, self.rect)
+
+    def center_ship(self):
+        '''Center ship on screen'''
+        self.rect.midbottom = self.screen_rect.midbottom
+        self.x = float(self.rect.x)
 
