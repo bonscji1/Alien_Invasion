@@ -8,6 +8,7 @@ from Ship import Ship
 from Bullet import Bullet
 from Alien import Alien
 from Game_stats import Game_stats
+from Button import Button
 from time import sleep
 
 
@@ -35,6 +36,9 @@ class AlienInvasion:
 
         self._create_invasion()
 
+        #control
+        self.play_button = Button(self,"Play")
+
     # helper method - start with _(underscore)
 
     def _update_screen(self):
@@ -45,6 +49,10 @@ class AlienInvasion:
             bullet.draw_bullet()
 
         self.aliens.draw(self.screen)
+
+        #Draw button if game is inactive
+        if not self.settings.game_active:
+            self.play_button.draw_button()
 
         # make most recent screen visible
         pygame.display.flip()
@@ -58,6 +66,9 @@ class AlienInvasion:
                 self._check_keyDown(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyUP(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_position = pygame.mouse.get_pos()
+                self._check_play_button(mouse_position)
 
     def _check_keyUP(self, event):
         if event.key == pygame.K_a or event.key == pygame.K_d:
@@ -80,6 +91,28 @@ class AlienInvasion:
             # move ship to the left
             self.ship.moving = True
             self.ship.moving_x = -self.settings.ship_speed
+
+    def _check_play_button(self, mouse_position):
+        '''start new game when player clicks play'''
+        if self.play_button.rect.collidepoint(mouse_position) and not self.settings.game_active:
+            self._game_reset()
+
+            self.settings.game_active = True
+            #hide mouse cursor
+            pygame.mouse.set_visible(False)
+
+
+
+    def _game_reset(self):
+        '''Reset game'''
+        self.stats.reset_stats()
+        self.settings.init_dynamic_settings()
+        # get rid of previous game objects
+        self.aliens.empty()
+        self.bullets.empty()
+        self._create_invasion()
+        self.ship.center_ship()
+
 
     def _fire_bullet(self):
         '''create bullet and add it to bullets'''
@@ -109,7 +142,7 @@ class AlienInvasion:
         test_alien = Alien(self)
         alien_width, alien_height = test_alien.rect.size
         available_space_x = self.settings.screen_width - (2 * alien_width)
-        num_of_aliens_x = available_space_x // (2 * alien_width) + 1  # +1 is my correction
+        num_of_aliens_x = available_space_x // (2 * alien_width) + 1  # +1 is my correction - remove if game too hard
         available_space_y = self.settings.screen_height - (3 * alien_height)
         num_of_aliens_y = available_space_y // (2 * alien_height) - self.settings.alien_buffer_zone
 
@@ -164,6 +197,7 @@ class AlienInvasion:
     def _code_relentless_horde(self):
         if not self.aliens:
             self._reset_state()
+            self.settings.increase_speed()
 
     def _check_aliens_landed(self):
         '''check if aliens reached bottom of screen'''
@@ -185,6 +219,7 @@ class AlienInvasion:
 
     def _game_over(self):
         self.settings.game_active = False
+        pygame.mouse.set_visible(True)
 
     def run(self):
         '''Main loop'''
