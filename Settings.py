@@ -22,7 +22,8 @@ class Settings:
 
             #aliens settings
             self.alien_buffer_zone = 5
-            self.alien_speed_vertical = 10
+            self.alien_speed_vertical = 100#10
+
 
 
             #End settings
@@ -31,6 +32,8 @@ class Settings:
 
             #quick changeup to game
             self.speedup_scale = 1.5
+            self.speedup_alien_increase = 3
+
 
             self.init_dynamic_settings()
 
@@ -46,9 +49,11 @@ class Settings:
             #alien
             self.alien_speed_horizontal = 0.5
             self.alien_moving_right = True
+            self.alien_points = 100
 
         def increase_speed(self):
             '''increase speed of the game'''
             self.ship_speed *= self.speedup_scale
             self.bullet_speed *= self.speedup_scale
             self.alien_speed_horizontal *= self.speedup_scale
+            self.alien_points = int(self.alien_points * self.speedup_alien_increase)
