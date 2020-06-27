@@ -113,6 +113,7 @@ class AlienInvasion:
 
     def _game_reset(self):
         '''Reset game'''
+
         self.stats.reset_stats()
         self.settings.init_dynamic_settings()
         self.score.prep_score()
@@ -235,6 +236,7 @@ class AlienInvasion:
 
     def _game_over(self):
         self.settings.game_active = False
+        self.stats.save_high_score(self.stats.high_score)
         pygame.mouse.set_visible(True)
 
     def run(self):
