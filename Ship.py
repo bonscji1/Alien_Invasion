@@ -1,9 +1,11 @@
 import pygame
+from pygame.sprite import Sprite
 
-class Ship:
+class Ship(Sprite):
     '''Ship class'''
 
     def __init__(self,game):
+        super().__init__()
         self.screen = game.screen
         self.settings = game.settings
         self.screen_rect = game.screen.get_rect()
@@ -13,7 +15,8 @@ class Ship:
         self.rect = self.image.get_rect()
 
         #start at mid bottom
-        self.rect.midbottom = self.screen_rect.midbottom
+        #self.rect.midbottom = self.screen_rect.midbottom
+        self.center_ship()
 
         #movement
         self.moving = False
@@ -40,5 +43,6 @@ class Ship:
     def center_ship(self):
         '''Center ship on screen'''
         self.rect.midbottom = self.screen_rect.midbottom
+        self.rect.y -= self.rect.height
         self.x = float(self.rect.x)
 

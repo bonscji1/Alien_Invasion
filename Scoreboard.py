@@ -1,10 +1,13 @@
 
 import pygame.font
+from pygame.sprite import Group
+from Ship import Ship
 
 class Scoreboard:
     '''Class to track scoring information'''
 
     def __init__(self,game):
+        self.game = game
         self.screen = game.screen
         self.screen_rect = game.screen.get_rect()
         self.settings = game.settings
@@ -19,6 +22,7 @@ class Scoreboard:
         self.prep_score()
         self.prep_high_score()
         self.prep_level()
+        self.prep_ships()
 
     def prep_score(self):
         '''turn score into rendered image, then display it at top right'''
@@ -52,11 +56,21 @@ class Scoreboard:
         self.level_image_rect.left = 20
         self.level_image_rect.top = self.score_rect.top
 
+    def prep_ships(self):
+        '''Display how many ships are left'''
+        self.ships = Group()
+        for ship_number in range(self.stats.ship_left):
+            ship = Ship(self)
+            ship.rect.x = 10+ship_number*ship.rect.width
+            ship.rect.y = self.screen_rect.bottom - ship.rect.height
+            self.ships.add(ship)
+
     def show_score(self):
-        '''Draw score and level to screen'''
+        '''Draw score and level and lives to screen'''
         self.screen.blit(self.score_image,self.score_rect)
         self.screen.blit(self.high_score_image,self.high_score_rect)
         self.screen.blit(self.level_image, self.level_image_rect)
+        self.ships.draw(self.screen)
 
     def check_high_score(self):
         '''check if there is new high score'''

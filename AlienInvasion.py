@@ -117,6 +117,7 @@ class AlienInvasion:
         self.settings.init_dynamic_settings()
         self.score.prep_score()
         self.score.prep_level()
+        self.score.prep_ships()
         # get rid of previous game objects
         self.aliens.empty()
         self.bullets.empty()
@@ -186,6 +187,7 @@ class AlienInvasion:
         #remove ship life if you can
         if self.stats.ship_left>0:
             self.stats.ship_left -= 1
+            self.score.prep_ships()
             # reset game state
             self.aliens.empty()
             self._reset_state()
