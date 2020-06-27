@@ -14,7 +14,7 @@ class Settings:
             self.ship_limit = 3
 
             #Bullet setting
-            self.bullet_width = 5
+            self.bullet_width = 500#5
             self.bullet_height = 15
             self.bullet_color = (200,60,60)
             self.bullets_allowed = 3
@@ -22,7 +22,7 @@ class Settings:
 
             #aliens settings
             self.alien_buffer_zone = 5
-            self.alien_speed_vertical = 100#10
+            self.alien_speed_vertical = 10
 
 
 

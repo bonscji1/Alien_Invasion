@@ -13,10 +13,12 @@ class Scoreboard:
         #Font settings
         self.text_color = (30,150,30)
         self.high_score_color = (150,30,30)
+        self.level_color = (150,150,30)
         self.font = pygame.font.SysFont(None,48)
 
         self.prep_score()
         self.prep_high_score()
+        self.prep_level()
 
     def prep_score(self):
         '''turn score into rendered image, then display it at top right'''
@@ -41,10 +43,20 @@ class Scoreboard:
         self.high_score_rect.centerx = self.screen_rect.centerx
         self.high_score_rect.top = self.score_rect.top
 
+    def prep_level(self):
+        level_str = "Level: " + str(self.stats.level)
+        self.level_image = self.font.render(level_str, True, self.level_color, self.settings.bg_color)
+
+        # Display high score at top middle
+        self.level_image_rect = self.level_image.get_rect()
+        self.level_image_rect.left = 20
+        self.level_image_rect.top = self.score_rect.top
+
     def show_score(self):
-        '''Draw score to screen'''
+        '''Draw score and level to screen'''
         self.screen.blit(self.score_image,self.score_rect)
         self.screen.blit(self.high_score_image,self.high_score_rect)
+        self.screen.blit(self.level_image, self.level_image_rect)
 
     def check_high_score(self):
         '''check if there is new high score'''

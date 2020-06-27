@@ -21,6 +21,7 @@ class Game_stats:
         '''init changeable statistics'''
         self.ship_left = self.settings.ship_limit
         self.score = 0
+        self.level = 1
 
     def load_high_score(self):
         try:

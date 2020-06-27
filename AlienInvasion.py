@@ -113,10 +113,10 @@ class AlienInvasion:
 
     def _game_reset(self):
         '''Reset game'''
-
         self.stats.reset_stats()
         self.settings.init_dynamic_settings()
         self.score.prep_score()
+        self.score.prep_level()
         # get rid of previous game objects
         self.aliens.empty()
         self.bullets.empty()
@@ -177,6 +177,7 @@ class AlienInvasion:
         self._check_aliens_landed()
 
     def _alien_ship_collision(self):
+        '''check if aliens hit the ship'''
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             self._ship_hit()
 
@@ -215,6 +216,8 @@ class AlienInvasion:
         if not self.aliens:
             self._reset_state()
             self.settings.increase_speed()
+            self.stats.level += 1
+            self.score.prep_level()
 
     def _check_aliens_landed(self):
         '''check if aliens reached bottom of screen'''
