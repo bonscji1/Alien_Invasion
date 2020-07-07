@@ -11,7 +11,7 @@ class Ship(Sprite):
         self.screen_rect = game.screen.get_rect()
 
         #load ship image
-        self.image = pygame.image.load('images/ship.bmp')
+        self.image = pygame.image.load('images/ship.png')
         self.rect = self.image.get_rect()
 
         #start at mid bottom
